@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html class="dark" lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Sistem Klasifikasi Kesehatan</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#c4c5d7",
+                        "secondary": "#b6c4ff",
+                        "surface-container": "#102034",
+                        "on-primary-fixed": "#00164f",
+                        "on-secondary-container": "#a8b6f1",
+                        "primary": "#b6c4ff",
+                        "primary-container": "#0043c8",
+                        "inverse-surface": "#d3e3ff",
+                        "on-secondary-fixed-variant": "#354477",
+                        "on-primary-container": "#b2c1ff",
+                        "surface": "#031428",
+                        "outline-variant": "#434654",
+                        "outline": "#8e90a0",
+                        "surface-container-highest": "#26364b",
+                        "on-surface": "#d3e3ff",
+                        "surface-container-low": "#0b1c30",
+                        "background": "#031428",
+                        "surface-container-lowest": "#000f22",
+                        "on-primary": "#00277e"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope", "sans-serif"],
+                        "body": ["Manrope", "sans-serif"],
+                        "label": ["Manrope", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Manrope', sans-serif; }
+        .grid-bg {
+            background-image: linear-gradient(to right, rgba(182, 196, 255, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(182, 196, 255, 0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(150px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.15;
+        }
+        .orb-1 { background-color: #0043c8; }
+        .orb-2 { background-color: #93000a; }
+        .orb-3 { background-color: #00796b; }
+        
+        .glow-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glow-hover:hover {
+            box-shadow: 0 12px 32px rgba(0, 67, 200, 0.25);
+            border-color: rgba(182, 196, 255, 0.3);
+            transform: translateY(-4px);
+        }
+        
+        /* Stagger animation for cards */
+        .card-anim {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen relative overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+
+    <!-- Ambient Background Elements -->
+    <div class="fixed inset-0 grid-bg pointer-events-none z-0"></div>
+    <div class="orb orb-1 w-[500px] h-[500px] top-[-10%] left-[-10%]"></div>
+    <div class="orb orb-2 w-[400px] h-[400px] bottom-[20%] right-[-5%]"></div>
+    
+    <!-- TopAppBar Floating Desktop -->
+    <div class="fixed top-0 w-full z-50 p-4 md:p-6 transition-all flex justify-center pointer-events-none">
+        <header class="pointer-events-auto w-full max-w-5xl bg-[#0b1c30]/70 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-outline-variant/30 rounded-full font-manrope text-sm tracking-tight transition-all px-6 py-3 flex items-center justify-between">
+            <div class="flex-1 flex justify-start">
+                <a href="/" class="text-lg font-extrabold tracking-tight text-white flex items-center gap-2 hover:opacity-80 transition-opacity">
+                    <span class="material-symbols-outlined text-primary-container text-2xl" style="font-variation-settings: 'FILL' 1;">health_and_safety</span>
+                    HealthClassify
+                </a>
+            </div>
+            
+            <nav class="hidden md:flex flex-1 justify-center items-center">
+                <a href="/" class="text-white font-semibold transition-all hover:text-primary drop-shadow-sm">Portal Utama</a>
+            </nav>
+            
+            <div class="flex-1 flex justify-end items-center">
+                <!-- Search only -->
+                <button class="hidden md:flex text-[#b6c4ff] hover:bg-white/10 transition-all active:scale-95 duration-200 p-2 rounded-full items-center justify-center">
+                    <span class="material-symbols-outlined text-xl">search</span>
+                </button>
+            </div>
+        </header>
+    </div>
+
+    <!-- Main Content -->
+    <main class="relative z-10 pt-36 pb-24 px-6 md:px-12 max-w-7xl mx-auto flex flex-col items-center min-h-[calc(100vh-80px)]">
+        
+        <!-- Hero Section -->
+        <div class="text-center mb-16 w-full max-w-3xl card-anim" style="animation-delay: 0.1s;">
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-6 leading-tight font-headline">
+                Pilih Kategori Analisis Medis
+            </h1>
+            <p class="text-lg md:text-xl text-on-surface-variant font-body">
+                Platform cerdas yang menyediakan modul prediktif ML dan bantuan AI untuk mendukung keputusan klinis yang lebih baik.
+            </p>
+        </div>
+
+        <!-- Grid Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 w-full">
+            
+            <!-- Card 1: Stunting (Active) -->
+            <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-8 flex flex-col h-full glow-hover relative overflow-hidden group card-anim" style="animation-delay: 0.2s;">
+                <div class="absolute inset-0 bg-gradient-to-br from-primary-container/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                
+                <div class="flex justify-between items-start mb-6">
+                    <div class="p-3 bg-primary-container/10 border border-primary-container/20 rounded-xl text-primary font-bold">
+                        <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">child_care</span>
+                    </div>
+                    <span class="px-3 py-1 text-xs font-semibold bg-[#0f5132]/30 text-[#75b798] rounded-full border border-[#75b798]/30 shadow-sm flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#75b798]"></span>
+                        Tersedia
+                    </span>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-white mb-2 font-headline">Status Gizi Balita</h2>
+                
+                <div class="flex flex-wrap items-center gap-2 mb-4 text-xs font-medium text-secondary">
+                    <span class="px-2 py-1 bg-surface-container-highest rounded border border-outline-variant/30">K-Nearest Neighbors</span>
+                    <span class="px-2 py-1 bg-surface-container-highest rounded border border-outline-variant/30 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">psychiatry</span> AI
+                    </span>
+                </div>
+                
+                <p class="text-sm text-on-surface-variant mb-8 flex-grow font-body leading-relaxed">
+                    Evaluasi otomatis risiko stunting dan klasifikasi status gizi berdasarkan tinggi dan umur dengan standar rujukan.
+                </p>
+                
+                <a href="/stunting" class="w-full text-center py-3.5 px-4 bg-primary-container hover:bg-primary-container/90 text-white font-bold rounded-xl transition-all shadow-[0_4px_14px_0_rgba(0,67,200,0.39)] hover:shadow-[0_6px_20px_rgba(0,67,200,0.23)] active:scale-[0.98] z-10 block">
+                    Ganti ke Form
+                </a>
+            </div>
+
+            <!-- Card 2: Diabetes (Disabled) -->
+            <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-8 flex flex-col h-full relative overflow-hidden group card-anim" style="animation-delay: 0.3s; opacity: 0.65;">
+                
+                <div class="flex justify-between items-start mb-6">
+                    <div class="p-3 bg-red-900/20 border border-red-900/30 rounded-xl text-red-400 font-bold">
+                        <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">glucose</span>
+                    </div>
+                    <span class="px-3 py-1 text-xs font-semibold bg-surface-container-highest text-outline rounded-full border border-outline/30 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">lock</span>
+                        Segera Hadir
+                    </span>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-white mb-2 font-headline">Diabetes Mellitus</h2>
+                
+                <div class="flex flex-wrap items-center gap-2 mb-4 text-xs font-medium text-outline">
+                    <span class="px-2 py-1 bg-surface-container-highest rounded border border-outline-variant/30">Random Forest</span>
+                </div>
+                
+                <p class="text-sm text-on-surface-variant mb-8 flex-grow font-body leading-relaxed">
+                    Analisis risiko diabetes tingkat lanjut berdasarkan rekam medis klinis seperti glukosa, BMI, dan riwayat.
+                </p>
+                
+                <button disabled class="w-full py-3.5 px-4 bg-surface-container-highest text-outline font-semibold rounded-xl border border-outline-variant/30 cursor-not-allowed">
+                    Dalam Pengembangan
+                </button>
+            </div>
+
+            <!-- Card 3: Ibu Hamil (Disabled) -->
+            <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-8 flex flex-col h-full relative overflow-hidden group card-anim" style="animation-delay: 0.4s; opacity: 0.65;">
+                
+                <div class="flex justify-between items-start mb-6">
+                    <div class="p-3 bg-[#00796b]/20 border border-[#00796b]/30 rounded-xl text-teal-400 font-bold">
+                        <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">pregnant_woman</span>
+                    </div>
+                    <span class="px-3 py-1 text-xs font-semibold bg-surface-container-highest text-outline rounded-full border border-outline/30 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">lock</span>
+                        Segera Hadir
+                    </span>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-white mb-2 font-headline">Kehamilan Risiko Tinggi</h2>
+                
+                <div class="flex flex-wrap items-center gap-2 mb-4 text-xs font-medium text-outline">
+                    <span class="px-2 py-1 bg-surface-container-highest rounded border border-outline-variant/30">Logistic Regression</span>
+                </div>
+                
+                <p class="text-sm text-on-surface-variant mb-8 flex-grow font-body leading-relaxed">
+                    Deteksi dini ibu hamil berisiko tinggi terhadap komplikasi seperti preeklamsia dan anemia.
+                </p>
+                
+                <button disabled class="w-full py-3.5 px-4 bg-surface-container-highest text-outline font-semibold rounded-xl border border-outline-variant/30 cursor-not-allowed">
+                    Dalam Pengembangan
+                </button>
+            </div>
+
+            <!-- More placeholders can be added seamlessly here. The grid handles layout perfectly. -->
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-surface-container-lowest/50 w-full py-8 border-t border-outline-variant/10 flex flex-col items-center justify-center gap-4 relative z-10 font-manrope text-[11px] uppercase tracking-widest mt-auto">
+        <div class="text-[#b6c4ff] flex items-center gap-2">
+            © 2025 · Dibuat untuk penelitian & edukasi kesehatan
+        </div>
+        <div class="flex space-x-6">
+            <a class="text-outline hover:text-[#b6c4ff] transition-colors" href="#">Privacy Policy</a>
+            <a class="text-outline hover:text-[#b6c4ff] transition-colors" href="#">Contact Support</a>
+        </div>
+    </footer>
+
+</body>
+</html>
