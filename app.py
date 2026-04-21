@@ -11,7 +11,15 @@ try:
     scaler = joblib.load('models/scaler.pkl')
     le_status = joblib.load('models/label_encoder.pkl')
 except Exception as e:
-    print(f"Error loading models. Make sure you have run scripts/train.py first. Error: {e}")
+    print(f"Error loading models. Make sure you have run scripts/train_stunting.py first. Error: {e}")
+
+try:
+    knn_model_diabetes = joblib.load('models/model_knn_diabetes.pkl')
+    scaler_diabetes = joblib.load('models/scaler_diabetes.pkl')
+    le_gender_diabetes = joblib.load('models/le_gender_diabetes.pkl')
+    le_smoking_diabetes = joblib.load('models/le_smoking_diabetes.pkl')
+except Exception as e:
+    print(f"Error loading diabetes models. Make sure you have run scripts/train_diabetes.py first. Error: {e}")
 
 import os
 from dotenv import load_dotenv
@@ -107,15 +115,74 @@ def get_gemini_recommendation(umur, jk_text, tinggi, status_gizi):
         print(f"Gemini API Error/Timeout: {e}. Beralih menggunakan Groq API Backup.")
         return get_groq_recommendation(umur, jk_text, tinggi, status_gizi)
 
+def get_backup_recommendation_diabetes(prediction_text):
+    if prediction_text == "Positif Diabetes":
+        return "* **Segera Konsultasi Medis:** Kami sangat menyarankan Anda segera berkonsultasi dengan dokter untuk pemeriksaan gula darah lanjutan (seperti tes toleransi glukosa atau HbA1c ulang) dan perencanaan tata laksana medis.\n* **Modifikasi Gaya Hidup Segera:** Terapkan pola makan sehat dengan mengurangi asupan gula, karbohidrat sederhana, dan makanan olahan.\n* **Rutin Periksa Gula Darah:** Pantau kadar gula darah secara teratur sesuai petunjuk tenaga medis serta mulai rutinitas olahraga fisik ringan secara bertahap."
+    else:
+        return "* **Pertahankan Gaya Hidup Sehat:** Pertahankan pola asupan makanan bergizi seimbang, kaya serat dan rendah gula tambahan.\n* **Lakukan Aktivitas Fisik Rutin:** Setidaknya 150 menit per minggu aktivitas aerobik sedang (seperti jalan cepat) untuk menjaga sensitivitas insulin yang optimal.\n* **Skrining Berkala:** Lakukan pemeriksaan medis tahunan dan pantau indeks massa tubuh (BMI) Anda agar selalu dalam batas sehat."
+
+def get_groq_recommendation_diabetes(data, prediction_text):
+    url = "https://api.groq.com/openai/v1/chat/completions"
+    prompt = f"""
+    Sebagai dokter endokrinologis profesional, berikan penjelasan medis medis yang empatik tentang hasil prediksi diabetes ini.
+    Data profil pasien:
+    - BMI: {data.get('bmi')}
+    - HbA1c: {data.get('HbA1c_level')}%
+    - Glukosa Darah: {data.get('blood_glucose_level')} mg/dL
+    Analisis Sistem: {prediction_text}
+    
+    Berikan maksimal 3 bullet points tindakan lanjutan atau pencegahan. Gunakan nada yang menenangkan namun sangat profesional.
+    """
+    headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
+    payload = {
+        "model": "llama-3.1-8b-instant",
+        "messages": [{"role": "user", "content": prompt}],
+        "temperature": 0.5
+    }
+    try:
+        response = requests.post(url, json=payload, headers=headers, timeout=10)
+        response.raise_for_status()
+        return response.json()['choices'][0]['message']['content']
+    except Exception as e:
+        print(f"Groq API Error Diabetes: {e}")
+        return get_backup_recommendation_diabetes(prediction_text)
+
+def get_gemini_recommendation_diabetes(data, prediction_text):
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
+    prompt = f"""
+    Sebagai dokter endokrinologis profesional, berikan penjelasan medis medis yang empatik tentang hasil prediksi diabetes ini.
+    Data profil pasien:
+    - BMI: {data.get('bmi')}
+    - HbA1c: {data.get('HbA1c_level')}%
+    - Glukosa Darah: {data.get('blood_glucose_level')} mg/dL
+    Analisis Sistem: {prediction_text}
+    
+    Berikan maksimal 3 bullet points tindakan lanjutan atau pencegahan. Gunakan nada yang menenangkan namun sangat profesional.
+    """
+    payload = {"contents": [{"parts": [{"text": prompt}]}]}
+    headers = {"Content-Type": "application/json"}
+    try:
+        response = requests.post(url, json=payload, headers=headers, timeout=10)
+        response.raise_for_status()
+        return response.json()['candidates'][0]['content']['parts'][0]['text']
+    except Exception as e:
+        print(f"Gemini API Error Diabetes: {e}")
+        return get_groq_recommendation_diabetes(data, prediction_text)
+
 @app.route('/')
 def home():
     # Menampilkan file HTML (Portal Pemilihan Form)
     return render_template('home.html')
 
+@app.route('/diabetes')
+def diabetes():
+    # Menampilkan form diabetes
+    return render_template('diabetes.html')
+
 @app.route('/stunting')
 def stunting():
     # Menampilkan form stunting
-    return render_template('index.html')
+    return render_template('stunting.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -141,6 +208,42 @@ def predict():
             'status': 'success',
             'prediksi_gizi': prediction_label,
             'ai_saran': ai_recomendation
+        })
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 400
+
+@app.route('/predict_diabetes', methods=['POST'])
+def predict_diabetes():
+    try:
+        data = request.json
+        
+        gender_val = le_gender_diabetes.transform([data['gender']])[0]
+        smoking_val = le_smoking_diabetes.transform([data['smoking_history']])[0]
+        
+        X_baru = np.array([[
+            float(gender_val),
+            float(data['age']),
+            float(data['hypertension']),
+            float(data['heart_disease']),
+            float(smoking_val),
+            float(data['bmi']),
+            float(data['HbA1c_level']),
+            float(data['blood_glucose_level'])
+        ]])
+        
+        X_scaled = scaler_diabetes.transform(X_baru)
+        prediction = knn_model_diabetes.predict(X_scaled)[0]
+        prediction_text = "Positif Diabetes" if prediction == 1 else "Negatif Diabetes"
+        
+        ai_recommendation = get_gemini_recommendation_diabetes(data, prediction_text)
+        
+        return jsonify({
+            'status': 'success',
+            'prediction': prediction_text,
+            'recommendation': ai_recommendation
         })
     except Exception as e:
         return jsonify({

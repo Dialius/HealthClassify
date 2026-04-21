@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="dark" lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Cek Status Gizi Balita - HealthClassify</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#c4c5d7",
+                        "secondary": "#b6c4ff",
+                        "surface-container": "#102034",
+                        "on-primary-fixed": "#00164f",
+                        "on-secondary-container": "#a8b6f1",
+                        "primary": "#b6c4ff",
+                        "primary-container": "#0043c8",
+                        "inverse-surface": "#d3e3ff",
+                        "on-secondary-fixed-variant": "#354477",
+                        "on-primary-container": "#b2c1ff",
+                        "surface": "#031428",
+                        "outline-variant": "#434654",
+                        "outline": "#8e90a0",
+                        "surface-container-highest": "#26364b",
+                        "on-surface": "#d3e3ff",
+                        "surface-container-low": "#0b1c30",
+                        "background": "#031428",
+                        "surface-container-lowest": "#000f22",
+                        "on-primary": "#00277e"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope", "sans-serif"],
+                        "body": ["Manrope", "sans-serif"],
+                        "label": ["Manrope", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Manrope', sans-serif; color-scheme: dark; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .grid-bg {
+            background-image: linear-gradient(to right, rgba(182, 196, 255, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(182, 196, 255, 0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(150px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.15;
+        }
+        .orb-1 { background-color: #0043c8; }
+        .orb-2 { background-color: #93000a; }
+        .orb-3 { background-color: #00796b; }
+        
+        .shadow-ambient { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Elegant Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(142, 144, 160, 0.4); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(142, 144, 160, 0.7); }
+        * { scrollbar-width: thin; scrollbar-color: rgba(142, 144, 160, 0.4) transparent; }
+        
+        input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none; margin: 0;
+        }
+        input[type="number"] { -moz-appearance: textfield; }
+        
+        .ai-markdown p { margin-bottom: 0.75rem; color: #c4c5d7; }
+        .ai-markdown ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 0.75rem; color: #c4c5d7; }
+        .ai-markdown li { margin-bottom: 0.25rem; }
+        .ai-markdown strong { font-weight: 700; color: #ffffff; }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen relative overflow-x-hidden selection:bg-primary-container selection:text-white">
+
+    <div class="fixed inset-0 grid-bg pointer-events-none z-0"></div>
+    <div class="orb orb-1 w-[500px] h-[500px] top-[-10%] left-[-10%]"></div>
+    <div class="orb orb-3 w-[400px] h-[400px] bottom-[20%] right-[-5%]"></div>    
+
+    <div class="fixed top-0 w-full z-50 p-4 md:p-6 transition-all flex justify-center pointer-events-none">
+        <header class="pointer-events-auto w-full max-w-7xl bg-[#0b1c30]/70 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-outline-variant/30 rounded-full font-manrope text-sm tracking-tight px-6 py-3 flex justify-between items-center">
+            <div class="text-lg font-extrabold tracking-tight text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary-container text-2xl" style="font-variation-settings: 'FILL' 1;">child_care</span>
+                Modul Stunting
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <a href="/" class="text-[#b6c4ff] hover:bg-white/10 transition-all active:scale-95 duration-200 px-4 py-2 rounded-full flex items-center gap-2 font-medium">
+                    <span class="material-symbols-outlined text-xl">arrow_back</span>
+                    <span class="hidden sm:inline">Kembali ke Portal</span>
+                </a>
+            </div>
+        </header>
+    </div>
+
+    <main class="relative z-10 pt-36 pb-24 px-6 md:px-12 max-w-7xl mx-auto flex flex-col items-center">
+        
+        <div class="mb-10 text-center space-y-3 w-full max-w-3xl">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white font-headline tracking-tight leading-tight">Cek Status Gizi Balita</h1>
+            <p class="text-base md:text-lg text-on-surface-variant font-body mx-auto">Sistem Prediksi berbasis K-Nearest Neighbors dengan Evaluasi Otomatis AI</p>
+        </div>
+        
+        <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left Column: Form -->
+            <div class="lg:col-span-7">
+                <div class="bg-surface-container border border-outline-variant/20 rounded-2xl shadow-ambient p-6 md:p-10 relative overflow-hidden transition-all duration-300">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-container to-primary"></div>
+                    
+                    <h3 class="text-xl font-semibold text-white mb-6 flex items-center gap-2 font-headline">
+                        <span class="material-symbols-outlined text-primary">personal_injury</span>
+                        Parameter Fisik
+                    </h3>
+
+                    <form id="stuntingForm" class="space-y-6">
+                        
+                        <div class="bg-surface-container-highest/30 p-5 rounded-xl space-y-6 border border-outline-variant/10">
+                            <!-- Umur Field -->
+                            <div class="space-y-2">
+                                <label class="block text-sm font-semibold text-on-surface-variant font-label tracking-wide" for="umur">Umur (Bulan)</label>
+                                <div class="relative flex items-center">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-outline opacity-80 z-10">
+                                        <span class="material-symbols-outlined text-lg">calendar_month</span>
+                                    </span>
+                                    <input required class="w-full bg-surface-container border border-outline-variant/30 text-white rounded-lg py-4 pl-12 pr-24 focus:ring-2 focus:ring-primary-container focus:border-transparent transition-all placeholder:text-outline font-body text-base" id="umur" placeholder="Gunakan angka bulan, Cth: 12" type="number" min="0" max="60" step="1"/>
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-2">
+                                        <button type="button" onclick="document.getElementById('umur').stepDown()" class="w-8 h-8 flex justify-center items-center rounded-md bg-surface-container-highest text-on-surface-variant hover:text-white hover:bg-primary/40 transition-all focus:outline-none">
+                                            <span class="material-symbols-outlined text-sm">remove</span>
+                                        </button>
+                                        <div class="w-px h-5 bg-outline-variant/30 mx-1"></div>
+                                        <button type="button" onclick="document.getElementById('umur').stepUp()" class="w-8 h-8 flex justify-center items-center rounded-md bg-surface-container-highest text-on-surface-variant hover:text-white hover:bg-primary/40 transition-all focus:outline-none">
+                                            <span class="material-symbols-outlined text-sm">add</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Jenis Kelamin Field -->
+                            <div class="space-y-2">
+                                <label class="block text-sm font-semibold text-on-surface-variant font-label tracking-wide">Jenis Kelamin</label>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <label class="relative cursor-pointer group">
+                                        <input class="peer sr-only" name="gender" type="radio" value="0" required/>
+                                        <div class="flex items-center justify-center p-4 bg-surface-container border border-outline-variant/30 rounded-lg text-outline font-medium peer-checked:bg-primary-container/20 peer-checked:border-primary-container peer-checked:text-[#b6c4ff] transition-all">
+                                            <span class="material-symbols-outlined mr-2 opacity-70 group-hover:opacity-100 transition-opacity">face</span>
+                                            Laki-laki
+                                        </div>
+                                        <div class="absolute inset-0 border-2 border-transparent peer-checked:border-primary-container rounded-lg pointer-events-none transition-all"></div>
+                                    </label>
+                                    
+                                    <label class="relative cursor-pointer group">
+                                        <input class="peer sr-only" name="gender" type="radio" value="1"/>
+                                        <div class="flex items-center justify-center p-4 bg-surface-container border border-outline-variant/30 rounded-lg text-outline font-medium peer-checked:bg-primary-container/20 peer-checked:border-primary-container peer-checked:text-[#b6c4ff] transition-all">
+                                            <span class="material-symbols-outlined mr-2 opacity-70 group-hover:opacity-100 transition-opacity">face_3</span>
+                                            Perempuan
+                                        </div>
+                                        <div class="absolute inset-0 border-2 border-transparent peer-checked:border-primary-container rounded-lg pointer-events-none transition-all"></div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Tinggi Badan Field -->
+                            <div class="space-y-2">
+                                <label class="block text-sm font-semibold text-on-surface-variant font-label tracking-wide" for="tinggi">Tinggi Badan (cm)</label>
+                                <div class="relative flex items-center">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-outline opacity-80 z-10">
+                                        <span class="material-symbols-outlined text-lg">height</span>
+                                    </span>
+                                    <input required step="0.1" class="w-full bg-surface-container border border-outline-variant/30 text-white rounded-lg py-4 pl-12 pr-24 focus:ring-2 focus:ring-primary-container focus:border-transparent transition-all placeholder:text-outline font-body text-base" id="tinggi" placeholder="Contoh: 75.5" type="number" min="30" max="150"/>
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-2">
+                                        <button type="button" onclick="document.getElementById('tinggi').stepDown()" class="w-8 h-8 flex justify-center items-center rounded-md bg-surface-container-highest text-on-surface-variant hover:text-white hover:bg-primary/40 transition-all focus:outline-none">
+                                            <span class="material-symbols-outlined text-sm">remove</span>
+                                        </button>
+                                        <div class="w-px h-5 bg-outline-variant/30 mx-1"></div>
+                                        <button type="button" onclick="document.getElementById('tinggi').stepUp()" class="w-8 h-8 flex justify-center items-center rounded-md bg-surface-container-highest text-on-surface-variant hover:text-white hover:bg-primary/40 transition-all focus:outline-none">
+                                            <span class="material-symbols-outlined text-sm">add</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4">
+                            <button id="btnSubmit" class="w-full bg-gradient-to-r from-primary-container to-primary text-white py-4 rounded-xl font-bold font-label text-lg shadow-[0_8px_20px_rgba(0,67,200,0.25)] hover:shadow-[0_12px_24px_rgba(0,67,200,0.4)] transition-all transform active:scale-[0.98] flex justify-center items-center gap-2 disabled:opacity-70 disabled:cursor-wait" type="submit">
+                                <span id="btnIcon" class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+                                <span id="btnText">Jalankan Analisis Prediksi</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Column: Results & Info -->
+            <div class="lg:col-span-5 flex flex-col gap-6 lg:sticky lg:top-6 h-max">
+                <!-- Result Display Area -->
+                <div class="bg-surface-container border border-outline-variant/30 rounded-2xl shadow-ambient min-h-[500px] lg:h-[650px] flex flex-col relative transition-all duration-500 overflow-hidden group">
+                    <div id="resultStripe" class="absolute top-0 left-0 w-full h-[3px] bg-outline-variant/30 transition-all duration-500 z-40"></div>
+
+                    <!-- INITIAL STATE -->
+                    <div id="initialState" class="absolute inset-0 flex flex-col justify-center items-center text-center p-8 transition-opacity duration-300 z-10 bg-surface-container">
+                        <div class="w-24 h-24 bg-surface-container-highest/50 rounded-full flex items-center justify-center mb-6 shadow-inner border border-outline-variant/10">
+                            <span class="material-symbols-outlined text-6xl text-outline-variant/40">assignment</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2 font-headline tracking-wide">Lembar Hasil Analisis</h3>
+                        <p class="text-base text-on-surface-variant max-w-sm font-body leading-relaxed">Silakan isi formulir parameter klinis di sebelah kiri. Sistem AI kami akan memproses data Anda dan menampilkan hasilnya di sini.</p>
+                    </div>
+
+                    <!-- LOADING STATE (Skeleton) -->
+                    <div id="loadingState" class="absolute inset-0 p-8 flex flex-col z-20 bg-surface-container hidden transition-opacity duration-300">
+                        <div class="flex items-center gap-4 mb-10">
+                            <div class="w-14 h-14 rounded-full bg-outline-variant/20 animate-pulse"></div>
+                            <div class="space-y-3 flex-1">
+                                <div class="h-4 bg-outline-variant/20 rounded w-1/3 animate-pulse"></div>
+                                <div class="h-3 bg-outline-variant/20 rounded w-1/4 animate-pulse"></div>
+                            </div>
+                        </div>
+                        <div class="space-y-5">
+                            <div class="h-3 bg-outline-variant/20 rounded w-full animate-pulse"></div>
+                            <div class="h-3 bg-outline-variant/20 rounded w-[90%] animate-pulse"></div>
+                            <div class="h-3 bg-outline-variant/20 rounded w-[95%] animate-pulse"></div>
+                            <div class="h-3 bg-outline-variant/20 rounded w-[80%] animate-pulse"></div>
+                            <div class="h-3 bg-outline-variant/20 rounded w-[85%] animate-pulse"></div>
+                            <div class="mt-4 h-3 bg-outline-variant/20 rounded w-full animate-pulse"></div>
+                            <div class="h-3 bg-outline-variant/20 rounded w-[70%] animate-pulse"></div>
+                        </div>
+                        <div class="mt-auto pt-6 flex justify-center border-t border-outline-variant/10">
+                            <div class="flex items-center gap-3 text-primary-container animate-pulse">
+                                <span class="material-symbols-outlined text-xl animate-spin">autorenew</span>
+                                <span class="text-sm font-bold tracking-widest font-label uppercase">AI Sedang Mengevaluasi...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ACTIVE RESULT STATE -->
+                    <div id="resultArea" class="flex-1 flex flex-col z-30 hidden transition-all duration-500 overflow-hidden bg-surface-container">
+                        
+                        <!-- Header -->
+                        <div class="p-6 md:p-8 flex items-center justify-between border-b border-outline-variant/10 shrink-0 bg-surface-container-lowest/30">
+                            <div>
+                                <h2 class="text-lg font-bold text-white font-headline tracking-wide">Laporan Diagnostik AI</h2>
+                                <p class="text-xs text-on-surface-variant mt-1">ID DOC: #<span id="reportId" class="font-mono text-[#b6c4ff]"></span></p>
+                            </div>
+                            <div class="bg-surface-container-highest/50 p-2.5 rounded-xl border border-outline-variant/20 shadow-sm">
+                                <span class="material-symbols-outlined text-white">verified_user</span>
+                            </div>
+                        </div>
+
+                        <!-- Content Area -->
+                        <div class="relative flex-1 overflow-hidden flex flex-col bg-gradient-to-b from-surface-container to-surface-container-lowest/50">
+                            <div class="p-6 md:p-8 flex-1 overflow-y-auto elegant-scrollbar space-y-8 pb-12">
+                                
+                                <!-- Dynamic Status Banner -->
+                                <div id="statusBanner" class="relative overflow-hidden rounded-2xl border p-6 flex items-center gap-5 shadow-sm transition-all duration-500 border-outline-variant/20 bg-surface-container-highest text-white shrink-0">
+                                    <div class="absolute inset-0 bg-gradient-to-r from-transparent to-black/20 pointer-events-none"></div>
+                                    <div id="statusIconBox" class="w-16 h-16 rounded-full flex items-center justify-center shrink-0 border-2 shadow-inner bg-white/5 z-10 border-white/20">
+                                        <span id="statusIcon" class="material-symbols-outlined text-3xl shrink-0" style="font-variation-settings: 'FILL' 1;">healing</span>
+                                    </div>
+                                    <div class="z-10 flex-1">
+                                        <p class="text-[10px] font-bold uppercase tracking-widest opacity-80 mb-1 font-label">Konklusi Algoritma KNN</p>
+                                        <h3 id="statusText" class="text-2xl md:text-3xl font-black font-headline tracking-tighter"></h3>
+                                    </div>
+                                </div>
+
+                                <!-- AI Tinjauan -->
+                                <div class="space-y-5">
+                                    <h4 class="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2 border-b border-outline-variant/20 pb-3">
+                                        <span class="material-symbols-outlined text-primary-container text-xl">smart_toy</span>
+                                        Tinjauan & Saran Klinis
+                                    </h4>
+                                    <div id="aiRecommendationText" class="text-[15px] text-[#d3e3ff] leading-relaxed ai-markdown font-body"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Scroll fade overlay pointer -->
+                            <div class="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-surface-container-lowest/90 to-transparent pointer-events-none flex justify-center items-end pb-3">
+                                <span class="material-symbols-outlined text-on-surface-variant/40 text-[20px]">keyboard_arrow_down</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Reference Guidelines -->
+                 <div class="bg-surface-container-highest/20 rounded-xl p-6 border border-outline-variant/10">
+                    <h4 class="text-sm font-semibold text-white mb-4 flex items-center gap-2 font-headline">
+                        <span class="material-symbols-outlined text-sm text-[#b6c4ff]">info</span>
+                        Referensi Klasifikasi (WHO)
+                    </h4>
+                    <div class="space-y-3 font-body">
+                        <div class="flex justify-between items-center border-b border-surface-container-highest pb-2">
+                            <span class="text-xs text-on-surface-variant">Severely Stunted (Sangat Pendek)</span>
+                            <span class="text-xs font-mono text-[#ffb4ab] bg-[#93000a]/20 px-2 py-1 rounded border border-[#ffb4ab]/30">&lt; -3 SD</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-surface-container-highest pb-2">
+                            <span class="text-xs text-on-surface-variant">Stunted (Pendek)</span>
+                            <span class="text-xs font-mono text-orange-400 bg-orange-900/20 px-2 py-1 rounded border border-orange-500/30">-3 SD s.d. &lt; -2 SD</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-surface-container-highest pb-2">
+                            <span class="text-xs text-on-surface-variant">Normal</span>
+                            <span class="text-xs font-mono text-[#75b798] bg-[#0f5132]/30 px-2 py-1 rounded border border-[#75b798]/30">-2 SD s.d. +2 SD</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-on-surface-variant">Tinggi</span>
+                            <span class="text-xs font-mono text-[#b6c4ff] bg-[#0043c8]/20 px-2 py-1 rounded border border-[#b6c4ff]/30">&gt; +2 SD</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-surface-container-lowest/50 w-full py-8 border-t border-outline-variant/10 flex flex-col items-center justify-center gap-4 relative z-10 font-manrope text-[11px] uppercase tracking-widest mt-auto mt-20">
+        <div class="text-[#b6c4ff] flex items-center gap-2">
+            © 2025 · Bagian dari HealthClassify - Modul Stunting
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="{{ url_for('static', filename='stunting_script.js') }}"></script>
+</body>
+</html>

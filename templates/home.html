@@ -46,7 +46,14 @@
         }
     </script>
     <style>
-        body { font-family: 'Manrope', sans-serif; }
+        body { font-family: 'Manrope', sans-serif; color-scheme: dark; }
+        
+        /* Global Elegant Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(142, 144, 160, 0.4); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(142, 144, 160, 0.7); }
+        * { scrollbar-width: thin; scrollbar-color: rgba(142, 144, 160, 0.4) transparent; }
         .grid-bg {
             background-image: linear-gradient(to right, rgba(182, 196, 255, 0.05) 1px, transparent 1px),
                               linear-gradient(to bottom, rgba(182, 196, 255, 0.05) 1px, transparent 1px);
@@ -162,32 +169,36 @@
                 </a>
             </div>
 
-            <!-- Card 2: Diabetes (Disabled) -->
-            <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-8 flex flex-col h-full relative overflow-hidden group card-anim" style="animation-delay: 0.3s; opacity: 0.65;">
+            <!-- Card 2: Diabetes (Active) -->
+            <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-8 flex flex-col h-full glow-hover relative overflow-hidden group card-anim" style="animation-delay: 0.3s;">
+                <div class="absolute inset-0 bg-gradient-to-br from-red-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                 
                 <div class="flex justify-between items-start mb-6">
                     <div class="p-3 bg-red-900/20 border border-red-900/30 rounded-xl text-red-400 font-bold">
                         <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">glucose</span>
                     </div>
-                    <span class="px-3 py-1 text-xs font-semibold bg-surface-container-highest text-outline rounded-full border border-outline/30 flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[14px]">lock</span>
-                        Segera Hadir
+                    <span class="px-3 py-1 text-xs font-semibold bg-[#0f5132]/30 text-[#75b798] rounded-full border border-[#75b798]/30 shadow-sm flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#75b798]"></span>
+                        Tersedia
                     </span>
                 </div>
                 
-                <h2 class="text-2xl font-bold text-white mb-2 font-headline">Diabetes Mellitus</h2>
+                <h2 class="text-2xl font-bold text-white mb-2 font-headline">Diabetes</h2>
                 
-                <div class="flex flex-wrap items-center gap-2 mb-4 text-xs font-medium text-outline">
-                    <span class="px-2 py-1 bg-surface-container-highest rounded border border-outline-variant/30">Random Forest</span>
+                <div class="flex flex-wrap items-center gap-2 mb-4 text-xs font-medium text-secondary">
+                    <span class="px-2 py-1 bg-surface-container-highest rounded border border-outline-variant/30">K-Nearest Neighbors</span>
+                    <span class="px-2 py-1 bg-surface-container-highest rounded border border-outline-variant/30 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">psychiatry</span> AI
+                    </span>
                 </div>
                 
                 <p class="text-sm text-on-surface-variant mb-8 flex-grow font-body leading-relaxed">
                     Analisis risiko diabetes tingkat lanjut berdasarkan rekam medis klinis seperti glukosa, BMI, dan riwayat.
                 </p>
                 
-                <button disabled class="w-full py-3.5 px-4 bg-surface-container-highest text-outline font-semibold rounded-xl border border-outline-variant/30 cursor-not-allowed">
-                    Dalam Pengembangan
-                </button>
+                <a href="/diabetes" class="w-full text-center py-3.5 px-4 bg-red-900/80 hover:bg-red-900 text-white font-bold rounded-xl transition-all shadow-[0_4px_14px_0_rgba(147,0,10,0.39)] hover:shadow-[0_6px_20px_rgba(147,0,10,0.23)] active:scale-[0.98] z-10 block">
+                    Ganti ke Form
+                </a>
             </div>
 
             <!-- Card 3: Ibu Hamil (Disabled) -->
