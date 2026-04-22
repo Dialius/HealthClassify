@@ -98,13 +98,13 @@
     <div class="orb orb-1 w-[500px] h-[500px] top-[-10%] left-[-10%]"></div>
     <div class="orb orb-2 w-[400px] h-[400px] bottom-[20%] right-[-5%]"></div>
     
-    <!-- TopAppBar Floating Desktop -->
-    <div class="fixed top-0 w-full z-50 p-4 md:p-6 transition-all flex justify-center pointer-events-none">
-        <header class="pointer-events-auto w-full max-w-5xl bg-[#0b1c30]/70 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-outline-variant/30 rounded-full font-manrope text-sm tracking-tight transition-all px-6 py-3 flex items-center justify-between">
-            <div class="flex-1 flex justify-start">
-                <a href="/" class="text-lg font-extrabold tracking-tight text-white flex items-center gap-2 hover:opacity-80 transition-opacity">
-                    <span class="material-symbols-outlined text-primary-container text-2xl" style="font-variation-settings: 'FILL' 1;">health_and_safety</span>
-                    HealthClassify
+    <!-- TopAppBar Floating Desktop & Mobile -->
+    <div class="fixed top-0 w-full z-50 p-3 sm:p-4 md:p-6 transition-all flex justify-center pointer-events-none">
+        <header class="pointer-events-auto w-full max-w-5xl bg-[#0b1c30]/70 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-outline-variant/30 rounded-full font-manrope text-sm tracking-tight transition-all px-4 sm:px-6 py-2 sm:py-3 flex items-center justify-between">
+            <div class="flex-1 flex justify-start min-w-0">
+                <a href="/" class="text-base sm:text-lg font-extrabold tracking-tight text-white flex items-center gap-1 sm:gap-2 hover:opacity-80 transition-opacity truncate">
+                    <span class="material-symbols-outlined text-primary-container text-xl sm:text-2xl shrink-0" style="font-variation-settings: 'FILL' 1;">health_and_safety</span>
+                    <span class="truncate hidden xs:inline sm:inline">HealthClassify</span>
                 </a>
             </div>
             
@@ -112,21 +112,25 @@
                 <a href="/" class="text-white font-semibold transition-all hover:text-primary drop-shadow-sm">Portal Utama</a>
             </nav>
             
-            <div class="flex-1 flex justify-end items-center">
-                <!-- Search only -->
-                <button class="hidden md:flex text-[#b6c4ff] hover:bg-white/10 transition-all active:scale-95 duration-200 p-2 rounded-full items-center justify-center">
-                    <span class="material-symbols-outlined text-xl">search</span>
-                </button>
+            <div class="flex flex-1 justify-end items-center min-w-0 shrink-0">
+                <!-- Search Component -->
+                <div class="flex items-center bg-surface-container-highest/50 border border-outline-variant/30 rounded-full px-2 sm:px-3 py-1.5 transition-all focus-within:bg-surface-container-highest focus-within:border-primary/50 focus-within:shadow-[0_0_12px_rgba(182,196,255,0.15)] focus-within:w-48 w-36 sm:w-48 sm:focus-within:w-64 duration-300 group">
+                    <span class="material-symbols-outlined text-on-surface-variant text-base sm:text-lg">search</span>
+                    <input type="text" id="searchInput" placeholder="Cari..." class="bg-transparent border-none focus:ring-0 text-white text-xs sm:text-sm w-full ml-1 sm:ml-2 placeholder-on-surface-variant font-body outline-none" autocomplete="off" />
+                    <div class="hidden sm:flex items-center justify-center bg-surface-container rounded px-1.5 py-0.5 ml-1 border border-outline-variant/30 group-focus-within:opacity-50 transition-opacity shrink-0">
+                        <span class="text-[10px] text-outline font-bold tracking-wider" id="shortcutKey">Ctrl+K</span>
+                    </div>
+                </div>
             </div>
         </header>
     </div>
 
     <!-- Main Content -->
-    <main class="relative z-10 pt-36 pb-24 px-6 md:px-12 max-w-7xl mx-auto flex flex-col items-center min-h-[calc(100vh-80px)]">
+    <main class="relative z-10 pt-28 sm:pt-36 pb-20 sm:pb-24 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto flex flex-col items-center min-h-[calc(100vh-80px)]">
         
         <!-- Hero Section -->
-        <div class="text-center mb-16 w-full max-w-3xl card-anim" style="animation-delay: 0.1s;">
-            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-6 leading-tight font-headline">
+        <div class="text-center mb-12 sm:mb-16 w-full max-w-3xl card-anim px-2" style="animation-delay: 0.1s;">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-4 sm:mb-6 leading-tight font-headline">
                 Pilih Kategori Analisis Medis
             </h1>
             <p class="text-lg md:text-xl text-on-surface-variant font-body">
@@ -145,8 +149,11 @@
                     <div class="p-3 bg-primary-container/10 border border-primary-container/20 rounded-xl text-primary font-bold">
                         <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">child_care</span>
                     </div>
-                    <span class="px-3 py-1 text-xs font-semibold bg-[#0f5132]/30 text-[#75b798] rounded-full border border-[#75b798]/30 shadow-sm flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 rounded-full bg-[#75b798]"></span>
+                    <span class="px-3 py-1 text-xs font-semibold bg-[#0f5132]/30 text-[#75b798] rounded-full border border-[#75b798]/30 shadow-sm flex items-center gap-1.5">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#75b798] opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-[#75b798]"></span>
+                        </span>
                         Tersedia
                     </span>
                 </div>
@@ -177,8 +184,11 @@
                     <div class="p-3 bg-red-900/20 border border-red-900/30 rounded-xl text-red-400 font-bold">
                         <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">glucose</span>
                     </div>
-                    <span class="px-3 py-1 text-xs font-semibold bg-[#0f5132]/30 text-[#75b798] rounded-full border border-[#75b798]/30 shadow-sm flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 rounded-full bg-[#75b798]"></span>
+                    <span class="px-3 py-1 text-xs font-semibold bg-[#0f5132]/30 text-[#75b798] rounded-full border border-[#75b798]/30 shadow-sm flex items-center gap-1.5">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#75b798] opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-[#75b798]"></span>
+                        </span>
                         Tersedia
                     </span>
                 </div>
@@ -244,6 +254,43 @@
             <a class="text-outline hover:text-[#b6c4ff] transition-colors" href="#">Contact Support</a>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const searchInput = document.getElementById("searchInput");
+            const shortcutKey = document.getElementById("shortcutKey");
+            const cards = document.querySelectorAll('.grid > div');
+            const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+
+            if (shortcutKey) {
+                shortcutKey.textContent = isMac ? '⌘K' : 'Ctrl+K';
+            }
+
+            // Keyboard shortcut listener for Ctrl+K or Cmd+K
+            document.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                    e.preventDefault();
+                    if (searchInput) searchInput.focus();
+                }
+            });
+
+            // Filter logic
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase();
+                    cards.forEach(card => {
+                        const title = card.querySelector('h2')?.textContent?.toLowerCase() || '';
+                        const desc = card.querySelector('p')?.textContent?.toLowerCase() || '';
+                        if (title.includes(query) || desc.includes(query)) {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>
