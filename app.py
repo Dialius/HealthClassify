@@ -73,7 +73,7 @@ def get_groq_recommendation(umur, jk_text, tinggi, status_gizi):
     Seorang pasien balita berusia {umur} bulan, berjenis kelamin {jk_text}, dengan tinggi badan {tinggi} cm saat ini 
     terdiagnosis dengan kelas status gizi: {status_gizi}.
     
-    Berikan edukasi medis serta maksimal 3 poin saran penanganan klinis dan pola asuh suportif untuk panduan orang tua. 
+    Berikan edukasi medis serta maksimal 3 poin saran penanganan klinis, anjuran asupan nutrisi secara spesifik (harus makan apa/menu harian yang baik), dan pola asuh suportif untuk panduan orang tua. 
     Gunakan gaya bahasa yang sangat profesional, sangat empatik, menenangkan, dokter-sentris, namun tetap mudah dipahami awam.
     Jawab langsung pada intinya menggunakan Markdown bullet points, tanpa kalimat pembuka/penutup basa-basi.
     """
@@ -106,7 +106,7 @@ def get_gemini_recommendation(umur, jk_text, tinggi, status_gizi):
     Seorang pasien balita berusia {umur} bulan, berjenis kelamin {jk_text}, dengan tinggi badan {tinggi} cm saat ini 
     terdiagnosis dengan kelas status gizi: {status_gizi}.
     
-    Berikan edukasi medis serta maksimal 3 poin saran penanganan klinis dan pola asuh suportif untuk panduan orang tua. 
+    Berikan edukasi medis serta maksimal 3 poin saran penanganan klinis, anjuran asupan nutrisi secara spesifik (harus makan apa/menu harian yang baik), dan pola asuh suportif untuk panduan orang tua. 
     Gunakan gaya bahasa yang sangat profesional, sangat empatik, menenangkan, dokter-sentris, namun tetap mudah dipahami awam.
     Jawab langsung pada intinya menggunakan Markdown bullet points, tanpa kalimat pembuka/penutup basa-basi.
     """
@@ -138,14 +138,14 @@ def get_backup_recommendation_diabetes(prediction_text):
 def get_groq_recommendation_diabetes(data, prediction_text):
     url = "https://api.groq.com/openai/v1/chat/completions"
     prompt = f"""
-    Sebagai dokter endokrinologis profesional, berikan penjelasan medis medis yang empatik tentang hasil prediksi diabetes ini.
+    Sebagai dokter endokrinologis profesional, berikan penjelasan medis yang empatik tentang hasil prediksi diabetes ini.
     Data profil pasien:
     - BMI: {data.get('bmi')}
     - HbA1c: {data.get('HbA1c_level')}%
     - Glukosa Darah: {data.get('blood_glucose_level')} mg/dL
     Analisis Sistem: {prediction_text}
     
-    Berikan maksimal 3 bullet points tindakan lanjutan atau pencegahan. Gunakan nada yang menenangkan namun sangat profesional.
+    Berikan maksimal 3 bullet points tindakan lanjutan, anjuran spesifik pola makan (harus makan apa/yang harus dihindari), dan saran gaya hidup. Gunakan nada yang menenangkan namun sangat profesional.
     """
     headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
     payload = {
@@ -164,14 +164,14 @@ def get_groq_recommendation_diabetes(data, prediction_text):
 def get_gemini_recommendation_diabetes(data, prediction_text):
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
     prompt = f"""
-    Sebagai dokter endokrinologis profesional, berikan penjelasan medis medis yang empatik tentang hasil prediksi diabetes ini.
+    Sebagai dokter endokrinologis profesional, berikan penjelasan medis yang empatik tentang hasil prediksi diabetes ini.
     Data profil pasien:
     - BMI: {data.get('bmi')}
     - HbA1c: {data.get('HbA1c_level')}%
     - Glukosa Darah: {data.get('blood_glucose_level')} mg/dL
     Analisis Sistem: {prediction_text}
     
-    Berikan maksimal 3 bullet points tindakan lanjutan atau pencegahan. Gunakan nada yang menenangkan namun sangat profesional.
+    Berikan maksimal 3 bullet points tindakan lanjutan, anjuran spesifik pola makan (harus makan apa/yang harus dihindari), dan saran gaya hidup. Gunakan nada yang menenangkan namun sangat profesional.
     """
     payload = {"contents": [{"parts": [{"text": prompt}]}]}
     headers = {"Content-Type": "application/json"}
