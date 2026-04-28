@@ -35,7 +35,7 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
 
 # Setup MongoDB
-MONGO_URI = os.environ.get("MONGODB_URI", "mongodb+srv://Vercel-Admin-atlas-cyan-door:DHotzfI5kVaOVk7c@atlas-cyan-door.5cdrqld.mongodb.net/?retryWrites=true&w=majority")
+MONGO_URI = os.environ.get("MONGODB_URI")
 try:
     mongo_client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
     db = mongo_client["health_classify"]
