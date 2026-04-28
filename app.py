@@ -33,11 +33,11 @@ GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
 def get_backup_recommendation(status_gizi):
     """Sistem Pakar Lokal sebagai backup terakhir jika semua API mati."""
     status = str(status_gizi).lower()
-    if status == 'severely stunted':
+    if status == 'sangat stunting' or status == 'severely stunted':
         return ("* **Konsultasi Medis Segera:** Mari segera jadwalkan kunjungan ke Dokter Spesialis Anak untuk observasi komprehensif dan intervensi gizi medis khusus.\n"
                 "* **Prioritaskan Asupan Protein Hewani:** Sangat disarankan memberikan sumber protein adekuat seperti telur, ikan, daging, atau susu formula khusus sesuai rekomendasi medis.\n"
                 "* **Jaga Protokol Kebersihan:** Anak pada kondisi ini rentan terhadap infeksi. Mohon pastikan sterilisasi alat makannya dan terapkan kebersihan lingkungan.")
-    elif status == 'stunted':
+    elif status == 'stunting' or status == 'stunted':
         return ("* **Modifikasi Porsi Gizi Seimbang:** Tingkatkan kepadatan kalori dan protein hewani (seperti telur atau ikan) pada setiap jadwal makanan utamanya.\n"
                 "* **Pemantauan Antropometri Rutin:** Sangat penting bagi Bapak/Ibu untuk rutin memantau kurva pertumbuhan tinggi dan berat badannya setiap bulan di faskes terdekat.\n"
                 "* **Berikan Stimulasi Berkelanjutan:** Bantu maksimalkan potensi pertumbuhannya dengan mengajak anak aktif bergerak dan bermain sesuai usianya setiap hari.")
@@ -200,13 +200,21 @@ def predict():
         prediction_encoded = knn_model.predict(X_scaled)
         prediction_label = le_status.inverse_transform(prediction_encoded)[0]
         
+        stunting_map = {
+            'normal': 'Normal',
+            'severely stunted': 'Sangat Stunting',
+            'stunted': 'Stunting',
+            'tinggi': 'Tinggi'
+        }
+        prediction_label_id = stunting_map.get(prediction_label.lower(), prediction_label.title())
+        
         # 3. Panggil AI untuk rekomendasi (Gemini -> Groq -> Lokal)
         jk_text = "Laki-laki" if jk == 0 else "Perempuan"
-        ai_recomendation = get_gemini_recommendation(umur, jk_text, tinggi, prediction_label)
+        ai_recomendation = get_gemini_recommendation(umur, jk_text, tinggi, prediction_label_id)
         
         return jsonify({
             'status': 'success',
-            'prediksi_gizi': prediction_label,
+            'prediksi_gizi': prediction_label_id,
             'ai_saran': ai_recomendation
         })
     except Exception as e:

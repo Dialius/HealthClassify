@@ -107,13 +107,13 @@ document.addEventListener('DOMContentLoaded', () => {
         statusText.textContent = statusClean;
 
         // Konfigurasi Warna Berdasarkan Status Gizi
-        if (statusClean.includes('Sangat Pendek')) {
+        if (statusClean.includes('Sangat Stunting')) {
             statusBanner.className = "relative overflow-hidden rounded-2xl border p-6 flex items-center gap-5 shadow-sm transition-all duration-500 bg-red-900/10 border-red-500/30 text-red-100";
             statusIconBox.className = "w-16 h-16 rounded-full flex items-center justify-center shrink-0 border-2 shadow-[0_0_15px_rgba(239,68,68,0.3)] bg-red-500/20 border-red-500/50 z-10 text-red-400";
             resultStripe.className = "absolute top-0 left-0 w-full h-[3px] bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)] z-40";
             statusIcon.textContent = "warning";
             statusText.className = "text-2xl md:text-3xl font-black font-headline tracking-tighter text-red-400";
-        } else if (statusClean.includes('Pendek')) {
+        } else if (statusClean.includes('Stunting')) {
             statusBanner.className = "relative overflow-hidden rounded-2xl border p-6 flex items-center gap-5 shadow-sm transition-all duration-500 bg-orange-900/10 border-orange-500/30 text-orange-100";
             statusIconBox.className = "w-16 h-16 rounded-full flex items-center justify-center shrink-0 border-2 shadow-[0_0_15px_rgba(249,115,22,0.3)] bg-orange-500/20 border-orange-500/50 z-10 text-orange-400";
             resultStripe.className = "absolute top-0 left-0 w-full h-[3px] bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.8)] z-40";
