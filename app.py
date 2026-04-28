@@ -47,11 +47,11 @@ except Exception as e:
 def get_backup_recommendation(status_gizi):
     """Sistem Pakar Lokal sebagai backup terakhir jika semua API mati."""
     status = str(status_gizi).lower()
-    if status == 'sangat stunting' or status == 'severely stunted':
+    if status == 'sangat stunting' or status == 'severely stunted' or status == 'sangat pendek':
         return ("* **Konsultasi Medis Segera:** Mari segera jadwalkan kunjungan ke Dokter Spesialis Anak untuk observasi komprehensif dan intervensi gizi medis khusus.\n"
                 "* **Prioritaskan Asupan Protein Hewani:** Sangat disarankan memberikan sumber protein adekuat seperti telur, ikan, daging, atau susu formula khusus sesuai rekomendasi medis.\n"
                 "* **Jaga Protokol Kebersihan:** Anak pada kondisi ini rentan terhadap infeksi. Mohon pastikan sterilisasi alat makannya dan terapkan kebersihan lingkungan.")
-    elif status == 'stunting' or status == 'stunted':
+    elif status == 'stunting' or status == 'stunted' or status == 'pendek':
         return ("* **Modifikasi Porsi Gizi Seimbang:** Tingkatkan kepadatan kalori dan protein hewani (seperti telur atau ikan) pada setiap jadwal makanan utamanya.\n"
                 "* **Pemantauan Antropometri Rutin:** Sangat penting bagi Bapak/Ibu untuk rutin memantau kurva pertumbuhan tinggi dan berat badannya setiap bulan di faskes terdekat.\n"
                 "* **Berikan Stimulasi Berkelanjutan:** Bantu maksimalkan potensi pertumbuhannya dengan mengajak anak aktif bergerak dan bermain sesuai usianya setiap hari.")
@@ -216,8 +216,8 @@ def predict():
         
         stunting_map = {
             'normal': 'Normal',
-            'severely stunted': 'Sangat Stunting',
-            'stunted': 'Stunting',
+            'severely stunted': 'Sangat Pendek',
+            'stunted': 'Pendek',
             'tinggi': 'Tinggi'
         }
         prediction_label_id = stunting_map.get(prediction_label.lower(), prediction_label.title())
