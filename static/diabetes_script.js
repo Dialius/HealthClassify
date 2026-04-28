@@ -120,8 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingState.classList.add('hidden');
             resultArea.classList.remove('hidden');
 
-            // Generate report ID
-            reportId.textContent = Math.floor(100000 + Math.random() * 900000);
+            // Set report ID
+            reportId.textContent = result.doc_id;
 
             // Apply classes and text based on prediction outcome
             if (result.prediction === "Positif Diabetes") {

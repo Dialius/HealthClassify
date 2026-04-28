@@ -63,8 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadingState.classList.add('hidden');
                 resultArea.classList.remove('hidden');
 
-                // Generate report ID
-                reportId.textContent = Math.floor(100000 + Math.random() * 900000);
+                // Set report ID
+                reportId.textContent = data.doc_id;
 
                 tampilkanHasilBalita(data.prediksi_gizi);
                 

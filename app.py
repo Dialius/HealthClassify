@@ -3,8 +3,12 @@ import joblib
 import numpy as np
 import requests
 
-app = Flask(__name__)
+import os
+from datetime import datetime
+import random
+from pymongo import MongoClient
 
+app = Flask(__name__)
 # Memuat model yang sudah dilatih
 try:
     knn_model = joblib.load('models/model_knn.pkl')
@@ -29,6 +33,16 @@ load_dotenv()
 # Kunci API
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
+
+# Setup MongoDB
+MONGO_URI = os.environ.get("MONGODB_URI", "mongodb+srv://Vercel-Admin-atlas-cyan-door:DHotzfI5kVaOVk7c@atlas-cyan-door.5cdrqld.mongodb.net/?retryWrites=true&w=majority")
+try:
+    mongo_client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+    db = mongo_client["health_classify"]
+    history_collection = db["history"]
+except Exception as e:
+    print(f"MongoDB connection error: {e}")
+    history_collection = None
 
 def get_backup_recommendation(status_gizi):
     """Sistem Pakar Lokal sebagai backup terakhir jika semua API mati."""
@@ -212,10 +226,23 @@ def predict():
         jk_text = "Laki-laki" if jk == 0 else "Perempuan"
         ai_recomendation = get_gemini_recommendation(umur, jk_text, tinggi, prediction_label_id)
         
+        doc_id = str(random.randint(100000, 999999))
+        if history_collection is not None:
+            try:
+                history_collection.insert_one({
+                    "doc_id": doc_id,
+                    "type": "Stunting",
+                    "result": prediction_label_id,
+                    "timestamp": datetime.utcnow()
+                })
+            except Exception as e:
+                print(f"Failed to save history: {e}")
+        
         return jsonify({
             'status': 'success',
             'prediksi_gizi': prediction_label_id,
-            'ai_saran': ai_recomendation
+            'ai_saran': ai_recomendation,
+            'doc_id': doc_id
         })
     except Exception as e:
         return jsonify({
@@ -248,16 +275,44 @@ def predict_diabetes():
         
         ai_recommendation = get_gemini_recommendation_diabetes(data, prediction_text)
         
+        doc_id = str(random.randint(100000, 999999))
+        if history_collection is not None:
+            try:
+                history_collection.insert_one({
+                    "doc_id": doc_id,
+                    "type": "Diabetes",
+                    "result": prediction_text,
+                    "timestamp": datetime.utcnow()
+                })
+            except Exception as e:
+                print(f"Failed to save history: {e}")
+        
         return jsonify({
             'status': 'success',
             'prediction': prediction_text,
-            'recommendation': ai_recommendation
+            'recommendation': ai_recommendation,
+            'doc_id': doc_id
         })
     except Exception as e:
         return jsonify({
             'status': 'error',
             'message': str(e)
         }), 400
+
+@app.route('/api/history', methods=['GET'])
+def get_history():
+    if history_collection is None:
+        return jsonify({'status': 'error', 'message': 'Database not connected'}), 500
+    try:
+        records = history_collection.find({}, {'_id': 0}).sort('timestamp', -1).limit(5)
+        history_list = []
+        for r in records:
+            # Format timestamp
+            r['timestamp'] = r['timestamp'].strftime("%Y-%m-%d %H:%M:%S UTC")
+            history_list.append(r)
+        return jsonify({'status': 'success', 'data': history_list})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

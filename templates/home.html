@@ -240,15 +240,46 @@
                 </button>
             </div>
 
-            <!-- More placeholders can be added seamlessly here. The grid handles layout perfectly. -->
+            </div>
 
+        <!-- Real-time History Section -->
+        <div class="w-full mt-20 max-w-5xl card-anim" style="animation-delay: 0.5s;">
+            <h2 class="text-2xl font-bold text-white mb-6 font-headline flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">history</span>
+                Riwayat Check Real-time
+            </h2>
+            <div class="bg-surface-container border border-outline-variant/20 rounded-2xl p-6 overflow-hidden relative shadow-ambient">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-container to-primary"></div>
+                <div class="overflow-x-auto elegant-scrollbar">
+                    <table class="w-full text-left text-sm">
+                        <thead class="text-xs text-on-surface-variant uppercase bg-surface-container-highest/50 border-b border-outline-variant/20">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 font-semibold">ID Doc</th>
+                                <th scope="col" class="px-6 py-3 font-semibold">Tipe Check</th>
+                                <th scope="col" class="px-6 py-3 font-semibold">Hasil</th>
+                                <th scope="col" class="px-6 py-3 font-semibold">Waktu</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody" class="text-on-surface font-body divide-y divide-outline-variant/10">
+                            <tr>
+                                <td colspan="4" class="px-6 py-4 text-center text-outline animate-pulse">Memuat riwayat real-time...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
+
     </main>
 
     <!-- Footer -->
     <footer class="bg-surface-container-lowest/50 w-full py-8 border-t border-outline-variant/10 flex flex-col items-center justify-center gap-4 relative z-10 font-manrope text-[11px] uppercase tracking-widest mt-auto">
-        <div class="text-[#b6c4ff] flex items-center gap-2">
-            © 2025 · Dibuat untuk penelitian & edukasi kesehatan
+        <div class="text-[#b6c4ff] flex flex-col sm:flex-row items-center gap-2 text-center">
+            Made by VinTheGreat · 
+            <div class="flex gap-2">
+                <a href="https://www.instagram.com/pinisreal" target="_blank" class="hover:text-white transition-colors">Instagram</a> · 
+                <a href="https://github.com/Dialius" target="_blank" class="hover:text-white transition-colors">GitHub</a>
+            </div>
         </div>
         <div class="flex space-x-6">
             <a class="text-outline hover:text-[#b6c4ff] transition-colors" href="#">Privacy Policy</a>
@@ -290,6 +321,41 @@
                     });
                 });
             }
+
+            // Fetch history periodically
+            function fetchHistory() {
+                fetch('/api/history')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            const tbody = document.getElementById('historyTableBody');
+                            tbody.innerHTML = '';
+                            if (data.data.length === 0) {
+                                tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-outline">Belum ada riwayat check.</td></tr>';
+                                return;
+                            }
+                            data.data.forEach(item => {
+                                let typeClass = item.type === 'Diabetes' ? 'text-red-400 bg-red-900/20 border-red-500/30' : 'text-primary bg-primary-container/20 border-primary-container/30';
+                                tbody.innerHTML += `
+                                    <tr class="hover:bg-surface-container-highest/30 transition-colors">
+                                        <td class="px-6 py-4 font-mono text-[#b6c4ff]">#${item.doc_id}</td>
+                                        <td class="px-6 py-4">
+                                            <span class="px-2.5 py-1 text-xs font-semibold rounded-full border flex items-center justify-center w-max ${typeClass}">
+                                                ${item.type}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 font-semibold">${item.result}</td>
+                                        <td class="px-6 py-4 text-xs text-on-surface-variant">${item.timestamp}</td>
+                                    </tr>
+                                `;
+                            });
+                        }
+                    })
+                    .catch(err => console.error("Failed to fetch history", err));
+            }
+
+            fetchHistory();
+            setInterval(fetchHistory, 3000); // refresh every 3 seconds
         });
     </script>
 
