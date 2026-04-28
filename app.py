@@ -36,12 +36,17 @@ GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
 
 # Setup MongoDB
 MONGO_URI = os.environ.get("MONGODB_URI")
-try:
-    mongo_client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
-    db = mongo_client["health_classify"]
-    history_collection = db["history"]
-except Exception as e:
-    print(f"MongoDB connection error: {e}")
+
+if MONGO_URI:
+    try:
+        mongo_client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+        db = mongo_client["health_classify"]
+        history_collection = db["history"]
+    except Exception as e:
+        print(f"MongoDB connection error: {e}")
+        history_collection = None
+else:
+    print("MONGODB_URI is not set. Realtime history will be disabled.")
     history_collection = None
 
 def get_backup_recommendation(status_gizi):
