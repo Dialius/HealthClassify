@@ -327,8 +327,8 @@
                 fetch('/api/history')
                     .then(response => response.json())
                     .then(data => {
+                        const tbody = document.getElementById('historyTableBody');
                         if (data.status === 'success') {
-                            const tbody = document.getElementById('historyTableBody');
                             tbody.innerHTML = '';
                             if (data.data.length === 0) {
                                 tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-outline">Belum ada riwayat check.</td></tr>';
@@ -349,9 +349,14 @@
                                     </tr>
                                 `;
                             });
+                        } else {
+                            tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center text-red-400">Gagal memuat: ${data.message}</td></tr>`;
                         }
                     })
-                    .catch(err => console.error("Failed to fetch history", err));
+                    .catch(err => {
+                        console.error("Failed to fetch history", err);
+                        document.getElementById('historyTableBody').innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-red-400">Koneksi database terputus.</td></tr>';
+                    });
             }
 
             fetchHistory();
